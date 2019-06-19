@@ -3,23 +3,15 @@
 
 """Tests for `pybravi` package."""
 
-import pytest
+
+from pybravi.lattice import gen_lattice_vector
+import numpy as np
 
 
-from pybravi import pybravi
+def test_gen_lattice_vector():
+    vec_a, vec_b = gen_lattice_vector([0, 10], -120)
+    assert not np.array_equal(vec_a, vec_b)
 
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
-
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+    rads = np.arccos(vec_a.dot(vec_b) / (np.linalg.norm(vec_a) * np.linalg.norm(vec_b)))
+    expected_rads = np.radians(120)
+    assert np.abs(rads - expected_rads) <= 0.001
