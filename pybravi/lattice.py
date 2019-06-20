@@ -20,15 +20,20 @@ def gen_lattice_vector(vector, angle):
     return b_vec, a_vec
 
 
-# def gen_hexagonal_cell(shape, lattice_vectors):
-#    """
-#    stub
-#    """
-#    pass
+def gen_lattice(shape, lattice_vectors):
+    """
+    Generates a lattice given a shape and lattice vectors
 
-
-# def lattice_factory(lattice_type):
-#    """
-#    stub
-#    """
-#    pass
+    Args:
+       shape (tuple): shape of the lattice in a grid of points
+       lattice_vectors (np.array): a pair of lattice vectors
+    """
+    # Translate along one vector to fill up the bottom row.
+    x_pts = np.arange(0, shape[0])
+    x_component = lattice_vectors[0][0]*x_pts
+    y_component = lattice_vectors[0][1]*x_pts
+    base = np.dstack((x_component, y_component))
+    # now copy this array N times
+    points = np.array([x*np.array(lattice_vectors[1]) +
+                       base for x in range(0, shape[1])]).reshape(shape[0]*shape[1], 2)
+    return points
