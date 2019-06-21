@@ -20,7 +20,7 @@ def create_lattice_vector(vector, angle):
     return b_vec, a_vec
 
 
-def create_lattice(shape, lattice_vectors, slicer=None):
+def create_lattice(shape, lattice_vectors, slicer=None, translate=None):
     """
     Generates a lattice given a shape and lattice vectors
 
@@ -28,6 +28,7 @@ def create_lattice(shape, lattice_vectors, slicer=None):
        shape (tuple): shape of the lattice in a grid of points
        lattice_vectors (np.array): a pair of lattice vectors
        slicer (func): takes a function that knows how to remove points from  the lattice.
+       translate (func): function that knows how to shift the points to a new center
     """
     # Translate along one vector to fill up the bottom row.
     x_pts = np.arange(0, shape[0])
@@ -40,6 +41,9 @@ def create_lattice(shape, lattice_vectors, slicer=None):
 
     if slicer is not None:
         points = slicer(points)
+
+    if translate is not None:
+        points = translate(points)
 
     return points
 
@@ -54,7 +58,26 @@ def _centroid(points):
     length = points.shape[0]
     sum_x = np.sum(points[:, 0])
     sum_y = np.sum(points[:, 1])
-    return sum_x / length, sum_y / length
+    return np.array([sum_x / length, sum_y / length])
+
+
+def translation(new_center=np.array([0, 0])):
+    """
+    Translation wrapper
+    """
+    def func(points):
+        """
+        Shifts the centroid to a new center
+
+        Args:
+            points np.array(points): np array of points
+            new_center (np.array): np.array representing the center.
+        """
+        center = _centroid(points)
+        vec = new_center - center
+        points = np.array([point+vec for point in points])
+        return points
+    return func
 
 
 def radial_slicer(radius):

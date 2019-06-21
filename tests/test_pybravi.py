@@ -5,7 +5,7 @@
 
 
 from pybravi.lattice import create_lattice_vector, create_lattice, radial_slicer
-from pybravi.lattice import _centroid
+from pybravi.lattice import _centroid, translation
 import numpy as np
 
 
@@ -63,4 +63,14 @@ def test_centroid():
                        [-1, 0],
                        [0, -1]])
     center = _centroid(points)
+    assert np.array_equal(center, np.array([0, 0]))
+
+
+def test_shift_centroid():
+    x_component = 1/np.tan(np.arcsin(1/10))
+    vecs = create_lattice_vector([x_component, 1], -120)
+    points = create_lattice((2, 2), vecs)
+    func = translation(new_center=np.array([0, 0]))
+    new_points = func(points)
+    center = _centroid(new_points)
     assert np.array_equal(center, np.array([0, 0]))
