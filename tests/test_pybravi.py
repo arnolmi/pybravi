@@ -74,3 +74,17 @@ def test_shift_centroid():
     new_points = func(points)
     center = _centroid(new_points)
     assert np.array_equal(center, np.array([0, 0]))
+
+
+def test_create_lattice_slicer_transform():
+    x_component = 1/np.tan(np.arcsin(1/10))
+    vecs = create_lattice_vector([x_component, 1], -120)
+
+    slicer = radial_slicer(radius=10)
+    center = translation(new_center=np.array([0, 0]))
+    points = create_lattice((5, 5), vecs, slicer=slicer, translate=center)
+
+    print(_centroid(points))
+    dist = np.linalg.norm(_centroid(points) - np.array([0, 0]))
+    assert dist <= 0.001
+    assert len(points) == 7
