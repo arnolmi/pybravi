@@ -5,6 +5,7 @@
 
 
 from pybravi.lattice import create_lattice_vector, create_lattice, radial_slicer
+from pybravi.lattice import _centroid
 import numpy as np
 
 
@@ -30,9 +31,24 @@ def test_create_lattice():
 
 def test_radial_slicer():
     func = radial_slicer(radius=1)
-    test_points = np.array([[0, 0], [1, 0], [2, 0]])
+    test_points = np.array([[1, 0],
+                            [-1, 0],
+                            [0, -1],
+                            [0, 1],
+                            [2, 0]])
     res = func(test_points)
     for point in res:
         assert not np.array_equal(point, np.array([2, 0]))
         assert np.array_equal(point, np.array([1, 0])) or \
-            np.array_equal(point, np.array([0, 0]))
+            np.array_equal(point, np.array([-1, 0])) or \
+            np.array_equal(point, np.array([0, 1])) or \
+            np.array_equal(point, np.array([0, -1]))
+
+
+def test_centroid():
+    points = np.array([[0, 1],
+                       [1, 0],
+                       [-1, 0],
+                       [0, -1]])
+    center = _centroid(points)
+    assert np.array_equal(center, np.array([0, 0]))

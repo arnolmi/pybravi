@@ -44,13 +44,25 @@ def create_lattice(shape, lattice_vectors, slicer=None):
     return points
 
 
-def radial_slicer(radius, center=np.array([0, 0])):
+def _centroid(points):
     """
-    Wrapper for methods using the center point
+    Finds the center of a bunch of points.
+
+    Args:
+        points (np.array): points of which we will find the center.
+    """
+    length = points.shape[0]
+    sum_x = np.sum(points[:, 0])
+    sum_y = np.sum(points[:, 1])
+    return sum_x / length, sum_y / length
+
+
+def radial_slicer(radius):
+    """
+    Wrapper for methods using a radial slicer.
 
     Args:
         radius (float): a float representing how far from the center to cut points
-        center (np.array): the center from which we should slice.
     """
     def func(points):
         """
@@ -59,6 +71,7 @@ def radial_slicer(radius, center=np.array([0, 0])):
         Args:
             points (np.array): an array of points
         """
+        center = _centroid(points)
         res = [point for point in points if np.linalg.norm(point-center) <= radius]
         return np.array(res)
 
