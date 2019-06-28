@@ -80,6 +80,30 @@ def translation(new_center=np.array([0, 0])):
     return func
 
 
+def rectangle_slicer(x_boundary, y_boundary):
+    """
+    Wrapper for methods using a square slicer.
+
+    Args:
+        length (tuple): a float representing the length
+        width  (tuple): a float representing the width
+
+    """
+
+    def func(points):
+        """
+        Function to remove points outside the boundary.
+        """
+        # Remove points outside of the X boundary
+        points = [point for point in points if point[0]
+                  < x_boundary[0] and point[0] > x_boundary[1]]
+        points = [point for point in points if point[1]
+                  < y_boundary[0] and point[1] > y_boundary[1]]
+        return np.array(points)
+
+    return func
+
+
 def radial_slicer(radius):
     """
     Wrapper for methods using a radial slicer.

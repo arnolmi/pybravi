@@ -5,6 +5,7 @@
 
 
 from pybravi.lattice import create_lattice_vector, create_lattice, radial_slicer
+from pybravi.lattice import rectangle_slicer
 from pybravi.lattice import _centroid, translation
 import numpy as np
 
@@ -88,3 +89,19 @@ def test_create_lattice_slicer_transform():
     dist = np.linalg.norm(_centroid(points) - np.array([0, 0]))
     assert dist <= 0.001
     assert len(points) == 7
+
+
+def test_rectangle_slider():
+    func = rectangle_slicer((-1, 1), (-1, 1))
+    test_points = np.array([[1, 1],
+                            [1, -1],
+                            [-1, 1],
+                            [-1, -1],
+                            [2, 2]])
+    res = func(test_points)
+    for point in res:
+        assert not np.array_equal(point, np.array([2, 2]))
+        assert np.array_equal(point, np.array([1, 1]))
+        assert np.array_equal(point, np.array([1, -1]))
+        assert np.array_equal(point, np.array([-1, 1]))
+        assert np.array_equal(point, np.array([-1, -1]))
