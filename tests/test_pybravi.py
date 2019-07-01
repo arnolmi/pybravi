@@ -23,6 +23,8 @@ def test_create_lattice():
     vecs = create_lattice_vector([10, 0], -120)
     points = create_lattice((2, 2), vecs)
 
+    print(points)
+
     # Everything should be roughly 10 from the origin
     for point in points:
         norm = np.linalg.norm(point - np.array([0, 0]))
@@ -33,6 +35,7 @@ def test_create_lattice():
 def test_create_lattice_nonzero():
     x_component = 1/np.tan(np.arcsin(1/10))
     vecs = create_lattice_vector([x_component, 1], -120)
+    print(vecs)
     points = create_lattice((2, 2), vecs)
 
     # Everything should be roughly 10 from the origin
