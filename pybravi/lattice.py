@@ -39,12 +39,11 @@ def create_lattice(shape, lattice_vectors, slicer=None, translate=None):
     points = np.array([x*np.array(lattice_vectors[1]) +
                        base for x in range(0, shape[1])]).reshape(shape[0]*shape[1], 2)
 
-    if slicer is not None:
-        points = slicer(points)
-
-    print(points)
     if translate is not None:
         points = translate(points)
+
+    if slicer is not None:
+        points = slicer(points)
 
     return points
 

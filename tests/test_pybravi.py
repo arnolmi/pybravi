@@ -115,4 +115,6 @@ def test_create_both_transforms():
     rect = rectangle_slicer([-5, 5], [-5, 5])
     center = translation(new_center=np.array([0, 0]))
     points = create_lattice((5, 5), vecs, translate=center, slicer=rect)
-    assert np.array_equal(np.array([0, 0]), points[0])
+    print(points)
+    dist = np.linalg.norm(points[0] - np.array([0, 0]))
+    assert dist <= 0.001
