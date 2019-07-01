@@ -105,3 +105,14 @@ def test_rectangle_slider():
         assert np.array_equal(point, np.array([1, -1]))
         assert np.array_equal(point, np.array([-1, 1]))
         assert np.array_equal(point, np.array([-1, -1]))
+
+
+def test_create_both_transforms():
+    x_component = 1/np.tan(np.arcsin(1/10))
+    vecs = create_lattice_vector([x_component, 1], -120)
+
+    slicer = radial_slicer(radius=10)
+    rect = rectangle_slicer([-5, 5], [-5, 5])
+    center = translation(new_center=np.array([0, 0]))
+    points = create_lattice((5, 5), vecs, translate=center, slicer=rect)
+    assert np.array_equal(np.array([0, 0]), points[0])

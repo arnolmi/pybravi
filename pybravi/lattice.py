@@ -42,6 +42,7 @@ def create_lattice(shape, lattice_vectors, slicer=None, translate=None):
     if slicer is not None:
         points = slicer(points)
 
+    print(points)
     if translate is not None:
         points = translate(points)
 
@@ -96,9 +97,11 @@ def rectangle_slicer(x_boundary, y_boundary):
         """
         # Remove points outside of the X boundary
         points = [point for point in points if point[0]
-                  < x_boundary[0] and point[0] > x_boundary[1]]
+                  > x_boundary[0] and point[0] < x_boundary[1]]
+
         points = [point for point in points if point[1]
-                  < y_boundary[0] and point[1] > y_boundary[1]]
+                  > y_boundary[0] and point[1] < y_boundary[1]]
+
         return np.array(points)
 
     return func
