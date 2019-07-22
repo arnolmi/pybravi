@@ -7,6 +7,7 @@
 from pybravi.lattice import create_lattice_vector, create_lattice, radial_slicer
 from pybravi.lattice import rectangle_slicer
 from pybravi.lattice import _centroid, translation
+from pybravi.lattice import cells_function_factory
 import numpy as np
 
 
@@ -121,3 +122,14 @@ def test_create_both_transforms():
     print(points)
     dist = np.linalg.norm(points[0] - np.array([0, 0]))
     assert dist <= 0.001
+
+
+def test_hexagonal_cells_factory():
+    A = np.array([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [0, 2], [0, 3], [0, 4]])
+    f = cells_function_factory(A, num_cell_vertices=3, boxsize=(5, 5))
+    d, i = f([4, 0])
+    assert(np.array_equal(i, np.array([4, 0, 3])))
+    assert(np.array_equal(d, np.array([0., 1., 1.])))
+    d, i = f([0, 4])
+    assert(np.array_equal(i, np.array([8, 0, 7])))
+    assert(np.array_equal(d, np.array([0., 1., 1.])))

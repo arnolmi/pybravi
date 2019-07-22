@@ -2,6 +2,23 @@
 module for generating bravais lattices.
 """
 import numpy as np
+# pylint: disable=E0611
+from scipy.spatial import cKDTree
+
+
+def cells_function_factory(points, num_cell_vertices=7, boxsize=None):
+    """
+    Builds a function that takes a point and returns a candidate for
+    The unit cell.
+    """
+    # Build a CDT with PBC
+    kdt = cKDTree(points, boxsize=boxsize)
+
+    def func(point):
+        distance, index = kdt.query(point, num_cell_vertices)
+        return distance, index
+
+    return func
 
 
 def create_lattice_vector(vector, angle):
